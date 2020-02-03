@@ -1,0 +1,15 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+
+<Script file="libs\LibStub.lua"/>
+<Script file="libs\CallbackHandler-1.0.lua"/>
+<Script file="libs\LibDataBroker-1.1.lua"/>
+
+<Script file="main.lua"/>
+<Script file="locale.lua"/>
+
+<Script file="pet_information.lua"/>
+<Script file="pet_families.lua"/>
+<Script file="pet_abilities.lua"/>
+
+</Ui>
