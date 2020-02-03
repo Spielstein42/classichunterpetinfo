@@ -338,6 +338,7 @@ searchTextField2:SetWidth(283)
 searchTextField2:SetPoint("TOP", searchTextField, "BOTTOM", 0, 5)
 
 
+
 ------------------------------------
 -- Editbox 1 (ability-search)     --
 ------------------------------------
@@ -407,7 +408,7 @@ end)
 
 abilityEditbox:SetScript("OnTabPressed", function(self)
 	self:ClearFocus()
-	GetEditbox(2):SetFocus()
+	GetEditbox(3):SetFocus()
 end)
 
 searchFrame.abilityEditbox = abilityEditbox
@@ -422,6 +423,7 @@ abilityDeleteButton:SetScript("OnClick", function(self)
 end)
 
 searchFrame.abilityEditbox.button = abilityDeleteButton
+
 
 
 ------------------------------------
@@ -494,7 +496,7 @@ end)
 
 attackSpeedEditbox:SetScript("OnTabPressed", function(self)
 	self:ClearFocus()
-	GetEditbox(3):SetFocus()
+	GetEditbox(1):SetFocus()
 end)
 
 
@@ -510,6 +512,7 @@ attackSpeedDeleteButton:SetScript("OnClick", function(self)
 end)
 
 searchFrame.attackSpeedEditbox.button = attackSpeedDeleteButton
+
 
 
 ------------------------------------
@@ -581,7 +584,7 @@ end)
 
 rankEditbox:SetScript("OnTabPressed", function(self)
 	self:ClearFocus()
-	GetEditbox(1):SetFocus()
+	GetEditbox(2):SetFocus()
 end)
 
 searchFrame.rankEditbox = rankEditbox
