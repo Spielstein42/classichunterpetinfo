@@ -1157,8 +1157,8 @@ end
 
 function dataBroker.OnTooltipShow(tt)
 	tt:AddLine("ClassicHunterPetInfo")
-	tt:AddLine("|cffeda55fRight-Click|r to access search window.", 0.2, 1, 0.2, 1)
-	tt:AddLine("|cffeda55fLeft-Click|r to access options.", 0.2, 1, 0.2, 1)
+	tt:AddLine("|cffeda55fRight-Click|r to access options.", 0.2, 1, 0.2, 1)
+	tt:AddLine("|cffeda55fLeft-Click|r to access search window.", 0.2, 1, 0.2, 1)
 end
 
 
