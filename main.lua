@@ -181,17 +181,12 @@ local function ParseInputText(text)
 end
 ]]
 
-local function ParseAbilityText(text)
+local function ParseAbilityText(abilityText, rankNumber)
 
-	local ability, rank = string.match(text, "%s?(%a+)%s*(%d*)")
+	local ability = string.match(abilityText, "%s?([%a ]+)%s*")
 
 	if ability then
-		if rank == "" then
-			rank = 0
-		else
-			rank = tonumber(rank)
-		end
-		return SearchForAbility(ability, rank)
+		return SearchForAbility(ability, rankNumber)
 	end
 
 	return {}
@@ -240,6 +235,8 @@ local function GetEditbox(index)
 		return ClassicHunterPetInfo.EDTBox1
 	elseif index == 2 and ClassicHunterPetInfo.EDTBox2 then
 		return ClassicHunterPetInfo.EDTBox2
+	elseif index == 3 and ClassicHunterPetInfo.EDTBox3 then
+		return ClassicHunterPetInfo.EDTBox3
 	else
 		return nil
 	end
@@ -251,6 +248,8 @@ local function SetEditbox(index, editbox)
 		ClassicHunterPetInfo.EDTBox1 = editbox
 	elseif index == 2 then
 		ClassicHunterPetInfo.EDTBox2 = editbox
+	elseif index == 3 then
+		ClassicHunterPetInfo.EDTBox3 = editbox
 	end
 end
 
@@ -264,7 +263,7 @@ end
 
 
 local searchFrame = CreateFrame("Frame", "ClassicHunterPetInfoSearchFrame", UIParent, "UIPanelDialogTemplate")
-searchFrame:SetHeight(481)
+searchFrame:SetHeight(506)
 searchFrame:SetWidth(300)
 searchFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
 searchFrame.DisplayData = {}
@@ -333,6 +332,10 @@ searchTextField:SetHeight(25)
 searchTextField:SetWidth(283)
 searchTextField:SetPoint("TOPLEFT", searchFrame, "TOPLEFT", 12, -26)
 
+local searchTextField2 = CreateFrame("Frame", nil, searchFrame)--, "ThinBorderTemplate")
+searchTextField2:SetHeight(25)
+searchTextField2:SetWidth(283)
+searchTextField2:SetPoint("TOP", searchTextField, "BOTTOM", 0, 5)
 
 
 ------------------------------------
@@ -380,8 +383,10 @@ abilityEditbox:SetScript("OnTextChanged", function(self)
 	local textAbilities = GetEditbox(1):GetText()
 	local textAttackSpeed = GetEditbox(2):GetText()
 	local numberAttackSpeed = GetEditbox(2):GetNumber()
+	local textRank = GetEditbox(3):GetText()
+	local numberRank = GetEditbox(3):GetNumber()
 
-	local resultAbilities = ParseAbilityText(textAbilities)
+	local resultAbilities = ParseAbilityText(textAbilities, numberRank)
 	local resultAttackSpeed = ParseAttackSpeedText(numberAttackSpeed, textAttackSpeed)
 
 	searchFrame.DisplayData = IntersectionOfParsedTexts(resultAttackSpeed, resultAbilities)
@@ -390,8 +395,7 @@ abilityEditbox:SetScript("OnTextChanged", function(self)
 	self.button:SetShown(textAbilities ~= "")
 
 	searchFrame:UpdateFrame()
-end
-)
+end)
 
 abilityEditbox:SetScript("OnEscapePressed", function(self)
 	self:ClearFocus()
@@ -466,8 +470,10 @@ attackSpeedEditbox:SetScript("OnTextChanged", function(self)
 	local textAbilities = GetEditbox(1):GetText()
 	local textAttackSpeed = GetEditbox(2):GetText()
 	local numberAttackSpeed = GetEditbox(2):GetNumber()
+	local textRank = GetEditbox(3):GetText()
+	local numberRank = GetEditbox(3):GetNumber()
 
-	local resultAbilities = ParseAbilityText(textAbilities)
+	local resultAbilities = ParseAbilityText(textAbilities, numberRank)
 	local resultAttackSpeed = ParseAttackSpeedText(numberAttackSpeed, textAttackSpeed)
 
 	searchFrame.DisplayData = IntersectionOfParsedTexts(resultAttackSpeed, resultAbilities)
@@ -488,7 +494,7 @@ end)
 
 attackSpeedEditbox:SetScript("OnTabPressed", function(self)
 	self:ClearFocus()
-	GetEditbox(1):SetFocus()
+	GetEditbox(3):SetFocus()
 end)
 
 
@@ -506,6 +512,92 @@ end)
 searchFrame.attackSpeedEditbox.button = attackSpeedDeleteButton
 
 
+------------------------------------
+-- Editbox 3 (rank-search)     --
+------------------------------------
+local textForRankEditbox = searchTextField2:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+textForRankEditbox:SetHeight(25)
+textForRankEditbox:SetWidth(45)
+textForRankEditbox:SetPoint("TOPLEFT", searchTextField2, "TOPLEFT", 0, 0)
+textForRankEditbox:SetJustifyH("LEFT")
+textForRankEditbox:SetText("Rank:")
+
+
+-- EditBox 
+local rankEditbox = CreateFrame("EditBox", nil, searchTextField2)
+rankEditbox:SetHeight(18)
+rankEditbox:SetWidth(60)--(235)
+rankEditbox:SetPoint("LEFT", textForRankEditbox, "RIGHT", 0, 0)
+
+rankEditbox:SetFontObject("GameFontHighlightSmall")
+rankEditbox:SetMultiLine(false)
+rankEditbox:SetAutoFocus(false)
+rankEditbox:SetBackdrop(
+	{
+		bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+		edgeFile = "Interface\\ChatFrame\\ChatFrameBackground",
+		tile = true, edgeSize = 1, tileSize = 5,
+	}
+)
+rankEditbox:SetBackdropColor(0, 0, 0, 0.2)
+rankEditbox:SetBackdropBorderColor(0.3, 0.3, 0.30, 0.80)
+rankEditbox:SetJustifyH("LEFT")
+rankEditbox:SetCursorPosition(0)
+rankEditbox.LastInput = ""
+SetEditbox(3, rankEditbox)
+
+-- Editbox scripts
+rankEditbox:SetScript("OnEnterPressed", function(self)
+	self:ClearFocus()
+end
+)
+
+rankEditbox:SetScript("OnTextChanged", function(self)
+
+	local textAbilities = GetEditbox(1):GetText()
+	local textAttackSpeed = GetEditbox(2):GetText()
+	local numberAttackSpeed = GetEditbox(2):GetNumber()
+	local textRank = GetEditbox(3):GetText()
+	local numberRank = GetEditbox(3):GetNumber()
+
+	local resultAbilities = ParseAbilityText(textAbilities, numberRank)
+	local resultAttackSpeed = ParseAttackSpeedText(numberAttackSpeed, textAttackSpeed)
+
+	searchFrame.DisplayData = IntersectionOfParsedTexts(resultAttackSpeed, resultAbilities)
+	searchFrame.DataOffset = 0
+
+	self.button:SetShown(textRank ~= "")
+
+	searchFrame:UpdateFrame()
+end)
+
+rankEditbox:SetScript("OnEscapePressed", function(self)
+	self:ClearFocus()
+end)
+
+rankEditbox:SetScript("OnEditFocusLost", function(self)
+	self:ClearFocus()
+end)
+
+rankEditbox:SetScript("OnTabPressed", function(self)
+	self:ClearFocus()
+	GetEditbox(1):SetFocus()
+end)
+
+searchFrame.rankEditbox = rankEditbox
+
+
+local rankDeleteButton = CreateFrame("Button", nil, rankEditbox, "UIPanelSquareButton")
+rankDeleteButton:SetScale(0.5)
+rankDeleteButton:SetPoint("CENTER", rankEditbox, "RIGHT", -18, 0)
+rankDeleteButton:Hide()
+rankDeleteButton:SetScript("OnClick", function(self)
+	self:GetParent():SetText("")
+end)
+
+searchFrame.rankEditbox.button = rankDeleteButton
+
+
 
 ------------------------------------
 -- Subframes                      --
@@ -517,7 +609,7 @@ for f_index = 1, 6 do
 	s_frame:SetWidth(280)
 	s_frame:SetPoint(
 		"TOPLEFT",
-		(#subframes == 0 and searchTextField or subframes[#subframes]),
+		(#subframes == 0 and searchTextField2 or subframes[#subframes]),
 		"BOTTOMLEFT", 0, 0
 	)
 	s_frame:SetBackdrop(
