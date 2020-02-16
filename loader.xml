@@ -5,6 +5,8 @@
 <Script file="libs\CallbackHandler-1.0.lua"/>
 <Script file="libs\LibDataBroker-1.1.lua"/>
 
+<Include file="libs\!NoTaint_UIDropDownMenu\UIDropDownMenu.xml"/>
+
 <Script file="main.lua"/>
 <Script file="locale.lua"/>
 
