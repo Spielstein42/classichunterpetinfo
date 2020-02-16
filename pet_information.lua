@@ -4396,9 +4396,9 @@ ClassicHunterPetInfo.PET_INFORMATION = {
 		["max_level"] = 9,
 		["area"] = "Elwynn Forest",
 	},
-	-- Attack speed unknown
+	-- Attack speed unknown (value is set to 999 for sort functions)
 	[4660] = {
-		["attack_speed"] = -1,
+		["attack_speed"] = 999,
 		["name"] = "Maraudine Bonepaw",
 		["family"] = "Hyena",
 		["min_level"] = 37,
@@ -4406,7 +4406,7 @@ ClassicHunterPetInfo.PET_INFORMATION = {
 		["area"] = "Desolace",
 	},
 	[8208] = {
-		["attack_speed"] = -1,
+		["attack_speed"] = 999,
 		["name"] = "Murderous Blisterpaw",
 		["family"] = "Hyena",
 		["min_level"] = 43,
@@ -4414,7 +4414,7 @@ ClassicHunterPetInfo.PET_INFORMATION = {
 		["area"] = "Tanaris",
 	},
 	[8277] = {
-		["attack_speed"] = -1,
+		["attack_speed"] = 999,
 		["name"] = "Rekk'tilac",
 		["family"] = "Spider",
 		["min_level"] = 48,
@@ -4422,7 +4422,7 @@ ClassicHunterPetInfo.PET_INFORMATION = {
 		["area"] = "Searing Gorge",
 	},
 	[14233] = {
-		["attack_speed"] = -1,
+		["attack_speed"] = 999,
 		["name"] = "Ripscale",
 		["family"] = "Crocolisk",
 		["min_level"] = 39,
@@ -4430,7 +4430,7 @@ ClassicHunterPetInfo.PET_INFORMATION = {
 		["area"] = "Dustwallow Marsh",
 	},
 	[14283] = {
-		["attack_speed"] = -1,
+		["attack_speed"] = 999,
 		["name"] = "Stormpike Owl",
 		["family"] = "Owl",
 		["min_level"] = 53,
