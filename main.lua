@@ -1,5 +1,10 @@
 -- Addon:	     ClassicHunterPetInfo
 -- Author:	     Spielstein@Curse
+--
+-- Using the Library:
+-- NoTaint UIDropDownMenu by another@curse
+-- http://wow.curseforge.com/addons/notaint-uidropdownmenu/
+--
 
 
 if select(2, UnitClass("player")) ~= "HUNTER" then
@@ -43,7 +48,7 @@ local ldb = LibStub("LibDataBroker-1.1")
 
 ----------------------------------------------------------------------------
 ----------------------------------------------------------------------------
---------  Helper functions  ------------------------------------------------
+--------  Sorting functions  -----------------------------------------------
 ----------------------------------------------------------------------------
 ----------------------------------------------------------------------------
 
@@ -74,6 +79,84 @@ local function spairs(t, order)
         end
     end
 end
+
+
+
+-- The comparison function must return a boolean value specifying whether the first argument
+-- should be before the second argument in the sequence.
+-- (Source: http://lua-users.org/wiki/TableLibraryTutorial)
+
+local function SortByAlphabet(elem_a, elem_b)
+	return ClassicHunterPetInfo.PET_INFORMATION[elem_b]["name"] > ClassicHunterPetInfo.PET_INFORMATION[elem_a]["name"]
+end
+
+local function SortByAtkSpeedASC(elem_a, elem_b)
+	return ClassicHunterPetInfo.PET_INFORMATION[elem_b]["attack_speed"] > ClassicHunterPetInfo.PET_INFORMATION[elem_a]["attack_speed"]
+end
+
+local function SortByAtkSpeedDESC(elem_a, elem_b)
+	return ClassicHunterPetInfo.PET_INFORMATION[elem_b]["attack_speed"] < ClassicHunterPetInfo.PET_INFORMATION[elem_a]["attack_speed"]
+end
+
+local function SortByMinLevelASC(elem_a, elem_b)
+	return ClassicHunterPetInfo.PET_INFORMATION[elem_b]["min_level"] > ClassicHunterPetInfo.PET_INFORMATION[elem_a]["min_level"]
+end
+
+local function SortByMinLevelDESC(elem_a, elem_b)
+	return ClassicHunterPetInfo.PET_INFORMATION[elem_b]["min_level"] < ClassicHunterPetInfo.PET_INFORMATION[elem_a]["min_level"]
+end
+
+local function SortByMaxLevelASC(elem_a, elem_b)
+	return ClassicHunterPetInfo.PET_INFORMATION[elem_b]["max_level"] > ClassicHunterPetInfo.PET_INFORMATION[elem_a]["max_level"]
+end
+
+local function SortByMaxLevelDESC(elem_a, elem_b)
+	return ClassicHunterPetInfo.PET_INFORMATION[elem_b]["max_level"] < ClassicHunterPetInfo.PET_INFORMATION[elem_a]["max_level"]
+end
+
+
+local function GetSortFunctionID()
+
+	if ClassicHunterPetInfo and ClassicHunterPetInfo.SelectedSortFunctionID then
+		return ClassicHunterPetInfo.SelectedSortFunctionID
+	else
+		return 1
+	end
+end
+
+local function SetSortFunctionID(id)
+	ClassicHunterPetInfo.SelectedSortFunctionID = id
+end
+
+local function GetSortFunction()
+
+	local currentSortFunctionSelection = nil
+
+	if GetSortFunctionID() == 1 then
+		return SortByAlphabet
+	elseif GetSortFunctionID() == 2 then
+		return SortByAtkSpeedASC
+	elseif GetSortFunctionID() == 3 then
+		return SortByAtkSpeedDESC	
+	elseif GetSortFunctionID() == 4 then
+		return SortByMinLevelASC
+	elseif GetSortFunctionID() == 5 then
+		return SortByMinLevelDESC
+	elseif GetSortFunctionID() == 6 then
+		return SortByMaxLevelASC
+	elseif GetSortFunctionID() == 7 then
+		return SortByMaxLevelDESC
+	else
+		return SortByAlphabet
+	end
+end
+
+
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
+--------  Helper functions  ------------------------------------------------
+----------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 
 local function GetLocalization(key)
@@ -144,9 +227,9 @@ local function SearchForMinAttackSpeed(attackSpeed)
 
 	local foundData = {}
 
-	--for npc_id, data in pairs(ClassicHunterPetInfo.PET_INFORMATION) do
-	for npc_id, data in spairs(ClassicHunterPetInfo.PET_INFORMATION, function(t,a,b) return t[b]["attack_speed"] > t[a]["attack_speed"] end) do
-		if data["attack_speed"] > -1 and data["attack_speed"] <= attackSpeed then
+	for npc_id, data in pairs(ClassicHunterPetInfo.PET_INFORMATION) do
+	--for npc_id, data in spairs(ClassicHunterPetInfo.PET_INFORMATION, SortByAtkSpeed) do
+		if data["attack_speed"] < 999 and data["attack_speed"] <= attackSpeed then
 			table.insert(foundData, npc_id)
 		end
 	end
@@ -154,32 +237,6 @@ local function SearchForMinAttackSpeed(attackSpeed)
 	return foundData
 end
 
---[[
-local function ParseInputText(text)
-
-	local ability, rank = string.match(text, "%s?(%a+)%s*(%d*)")
-
-	if ability then
-		if rank == "" then
-			rank = 0
-		else
-			rank = tonumber(rank)
-		end
-		return SearchForAbility(ability, rank)
-	else
-
-		local replacedString = string.gsub(text, ",", ".")
-		local attackSpeed = string.match(replacedString, "%s?([0-9]*%.?[0-9]+)")
-
-		if attackSpeed then
-			attackSpeed = tonumber(attackSpeed)
-			return SearchForMinAttackSpeed(attackSpeed)
-		end
-	end
-
-	return {}
-end
-]]
 
 local function ParseAbilityText(abilityText, rankNumber)
 
@@ -205,10 +262,12 @@ end
 local function IntersectionOfParsedTexts(list_1, list_2)
     
     if #list_1 == 0 then
-       return list_2
+    	table.sort(list_2 , GetSortFunction())
+        return list_2
     end
     if #list_2 == 0 then
-       return list_1
+    	table.sort(list_1 , GetSortFunction())
+       	return list_1
     end
     
     local x, y
@@ -225,6 +284,9 @@ local function IntersectionOfParsedTexts(list_1, list_2)
            table.insert(result, list_1[x])
        end
     end
+
+    -- sort result
+    table.sort(result, GetSortFunction())
     
     return result
 end
@@ -335,7 +397,7 @@ searchTextField:SetPoint("TOPLEFT", searchFrame, "TOPLEFT", 12, -26)
 local searchTextField2 = CreateFrame("Frame", nil, searchFrame)--, "ThinBorderTemplate")
 searchTextField2:SetHeight(25)
 searchTextField2:SetWidth(283)
-searchTextField2:SetPoint("TOP", searchTextField, "BOTTOM", 0, 5)
+searchTextField2:SetPoint("TOP", searchTextField, "BOTTOM", 0, 3)
 
 
 
@@ -601,6 +663,47 @@ end)
 searchFrame.rankEditbox.button = rankDeleteButton
 
 
+------------------------------------
+-- DropdownMenu                   --
+------------------------------------
+local dropdownMenu = {}
+
+dropdownMenu.element = CreateFrame("Frame", "ClassicHunterPetInfoFrame_Dropdown", searchFrame, "Lib_UIDropDownMenuTemplate")
+dropdownMenu.element:SetPoint("LEFT", searchFrame.rankEditbox, "RIGHT", -2, -2)
+dropdownMenu.items = {
+	"Alphabetical",
+	"AttackSpeed (ascending)", "AttackSpeed (descending)",
+	"Min. Level (ascending)", "Min. Level (descending)",
+	"Max. Level (ascending)", "Max. Level (descending)",
+}
+local function OnClick(self)
+	Lib_UIDropDownMenu_SetSelectedID(dropdownMenu.element, self:GetID())
+	SetSortFunctionID(self:GetID())
+
+	local data = searchFrame.DisplayData
+	table.sort(data, GetSortFunction())
+	searchFrame.DisplayData = data
+	searchFrame:UpdateFrame()
+end
+local function initialize(self, level)
+	local info = Lib_UIDropDownMenu_CreateInfo()
+	for k, v in pairs(dropdownMenu.items) do
+		info = Lib_UIDropDownMenu_CreateInfo()
+		info.text = v
+		info.value = v
+		info.func = OnClick
+		Lib_UIDropDownMenu_AddButton(info, level)
+	end
+end
+Lib_UIDropDownMenu_Initialize(dropdownMenu.element, initialize)
+Lib_UIDropDownMenu_SetWidth(dropdownMenu.element, 145)
+Lib_UIDropDownMenu_SetButtonWidth(dropdownMenu.element, 145)
+Lib_UIDropDownMenu_JustifyText(dropdownMenu.element, "LEFT")
+Lib_UIDropDownMenu_SetSelectedID(dropdownMenu.element, 1)
+Lib_UIDropDownMenu_SetText(dropdownMenu.element, "Sort by")
+
+searchFrame.dropdownMenu = dropdownMenu
+
 
 ------------------------------------
 -- Subframes                      --
@@ -613,7 +716,8 @@ for f_index = 1, 6 do
 	s_frame:SetPoint(
 		"TOPLEFT",
 		(#subframes == 0 and searchTextField2 or subframes[#subframes]),
-		"BOTTOMLEFT", 0, 0
+		"BOTTOMLEFT", 0,
+		(#subframes == 0 and -2 or 0)
 	)
 	s_frame:SetBackdrop(
 		{
@@ -699,7 +803,11 @@ for f_index = 1, 6 do
 			if petData and familyData then
 				self.Icon:SetTexture(familyData["textureID"])
 				self.Name:SetText(petData["name"])
-				self.AttackSpeed:SetText(string.format("AtkSpeed: %.2f", petData["attack_speed"]))
+				if petData["attack_speed"] >= 999 then
+					self.AttackSpeed:SetText("AtkSpeed: unknown")
+				else
+					self.AttackSpeed:SetText(string.format("AtkSpeed: %.2f", petData["attack_speed"]))
+				end
 				if petData["min_level"] == petData["max_level"] then
 					self.LVL_and_Location:SetText(
 						string.format(
@@ -787,7 +895,7 @@ local scrollbar = CreateFrame("Slider", "ClassicHunterPetInfoFrame_ScrollBar", s
 scrollbar:SetWidth(10)
 scrollbar:SetHeight(425)
 scrollbar:SetOrientation('VERTICAL')
-scrollbar:SetPoint("LEFT", searchFrame, "RIGHT", -1, -25)
+scrollbar:SetPoint("LEFT", searchFrame, "RIGHT", -1, -35)
 
 scrollbar:SetMinMaxValues(0, 1)
 scrollbar:SetValue(0)
@@ -1013,7 +1121,7 @@ local function HookfunctionForGametooltip(...)
 						local petinfo = ClassicHunterPetInfo.PET_INFORMATION[npc_id_as_number]
 
 						if ClassicHunterPetInfoDB.showAttackSpeed then
-							if petinfo["attack_speed"] == -1 then
+							if petinfo["attack_speed"] >= 999 then
 								GameTooltip:AddDoubleLine(ClassicHunterPetInfo.LOCALIZATION["tlp_attack_speed"], "unknown")
 							else
 								GameTooltip:AddDoubleLine(ClassicHunterPetInfo.LOCALIZATION["tlp_attack_speed"], string.format("%.2f", petinfo["attack_speed"]))
