@@ -2,9 +2,16 @@
 -- Author:	     Spielstein@Curse
 --
 -- Using the Library:
--- NoTaint UIDropDownMenu by another@curse
--- http://wow.curseforge.com/addons/notaint-uidropdownmenu/
+-- UIDropDownMenu  by arithmander@WoWAce
+-- https://www.wowace.com/projects/libuidropdownmenu
 --
+-- Ace3
+-- https://www.wowace.com/projects/ace3
+--
+-- LibStub
+-- https://www.wowace.com/projects/libstub
+--
+
 
 
 if select(2, UnitClass("player")) ~= "HUNTER" then
@@ -668,7 +675,7 @@ searchFrame.rankEditbox.button = rankDeleteButton
 ------------------------------------
 local dropdownMenu = {}
 
-dropdownMenu.element = CreateFrame("Frame", "ClassicHunterPetInfoFrame_Dropdown", searchFrame, "Lib_UIDropDownMenuTemplate")
+dropdownMenu.element = L_Create_UIDropDownMenu("ClassicHunterPetInfoFrame_Dropdown", searchFrame)
 dropdownMenu.element:SetPoint("LEFT", searchFrame.rankEditbox, "RIGHT", -2, -2)
 dropdownMenu.items = {
 	"Alphabetical",
@@ -677,7 +684,7 @@ dropdownMenu.items = {
 	"Max. Level (ascending)", "Max. Level (descending)",
 }
 local function OnClick(self)
-	Lib_UIDropDownMenu_SetSelectedID(dropdownMenu.element, self:GetID())
+	L_UIDropDownMenu_SetSelectedID(dropdownMenu.element, self:GetID())
 	SetSortFunctionID(self:GetID())
 
 	local data = searchFrame.DisplayData
@@ -686,21 +693,21 @@ local function OnClick(self)
 	searchFrame:UpdateFrame()
 end
 local function initialize(self, level)
-	local info = Lib_UIDropDownMenu_CreateInfo()
+	local info = L_UIDropDownMenu_CreateInfo()
 	for k, v in pairs(dropdownMenu.items) do
-		info = Lib_UIDropDownMenu_CreateInfo()
+		info = L_UIDropDownMenu_CreateInfo()
 		info.text = v
 		info.value = v
 		info.func = OnClick
-		Lib_UIDropDownMenu_AddButton(info, level)
+		L_UIDropDownMenu_AddButton(info, level)
 	end
 end
-Lib_UIDropDownMenu_Initialize(dropdownMenu.element, initialize)
-Lib_UIDropDownMenu_SetWidth(dropdownMenu.element, 145)
-Lib_UIDropDownMenu_SetButtonWidth(dropdownMenu.element, 145)
-Lib_UIDropDownMenu_JustifyText(dropdownMenu.element, "LEFT")
-Lib_UIDropDownMenu_SetSelectedID(dropdownMenu.element, 1)
-Lib_UIDropDownMenu_SetText(dropdownMenu.element, "Sort by")
+L_UIDropDownMenu_Initialize(dropdownMenu.element, initialize)
+L_UIDropDownMenu_SetWidth(dropdownMenu.element, 145)
+L_UIDropDownMenu_SetButtonWidth(dropdownMenu.element, 145)
+L_UIDropDownMenu_JustifyText(dropdownMenu.element, "LEFT")
+L_UIDropDownMenu_SetSelectedID(dropdownMenu.element, 1)
+L_UIDropDownMenu_SetText(dropdownMenu.element, "Sort by")
 
 searchFrame.dropdownMenu = dropdownMenu
 
