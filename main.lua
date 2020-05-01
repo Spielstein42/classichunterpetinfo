@@ -1086,6 +1086,8 @@ InterfaceOptions_AddCategory(ClassicHunterPetInfo.opanel);
 -- hooking the gametooltip
 local function HookfunctionForGametooltip(...)
 
+	if ClassicHunterPetInfoDB == nil then return end
+
 	-- variables
 	local _
 
@@ -1322,16 +1324,8 @@ local function OnEvent(self, event, arg1, arg2, ...)
 		ClassicHunterPetInfo.opanel.BOXshowArea:SetChecked(ClassicHunterPetInfoDB.showArea)
 		ClassicHunterPetInfo.opanel.BOXshowTeaches:SetChecked(ClassicHunterPetInfoDB.showTeaches)
 		ClassicHunterPetInfo.opanel.BOXshowTeachesOwnPet:SetChecked(ClassicHunterPetInfoDB.showTeachesOwnPet)
-		ClassicHunterPetInfo.opanel.BOXshowTeachesOtherPets:SetChecked(ClassicHunterPetInfoDB.showTeachesOtherPets)
-
-	elseif event == "CRAFT_SHOW" then
-		--local index
-		--for index = 1, GetNumCrafts() do
-		--	print(GetCraftInfo(index))
-		--end
+		ClassicHunterPetInfo.opanel.BOXshowTeachesOtherPets:SetChecked(ClassicHunterPetInfoDB.showTeachesOtherPets)	
 	end
-
-	
 end
 
 
@@ -1385,7 +1379,6 @@ GameTooltip:HookScript("OnTooltipSetUnit", HookfunctionForGametooltip)
 
 -- loading saved settings
 ClassicHunterPetInfo.mainFrame:RegisterEvent("ADDON_LOADED")
-ClassicHunterPetInfo.mainFrame:RegisterEvent("CRAFT_SHOW")
 ClassicHunterPetInfo.mainFrame:SetScript("OnEvent", OnEvent)
 
 
