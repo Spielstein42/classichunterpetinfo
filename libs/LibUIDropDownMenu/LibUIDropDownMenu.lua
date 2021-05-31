@@ -218,7 +218,7 @@ local function creatre_UIDropDownList(name, parent)
 	f:SetFrameStrata("DIALOG")
 	f:EnableMouse(true)
 	
-	f.Backdrop = _G[name.."Backdrop"] or CreateFrame("Frame", name.."Backdrop", f)
+	f.Backdrop = _G[name.."Backdrop"] or CreateFrame("Frame", name.."Backdrop", f, BackdropTemplateMixin and "BackdropTemplate")
 	f.Backdrop:SetAllPoints()
 	f.Backdrop:SetBackdrop({
 		bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",

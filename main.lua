@@ -420,7 +420,7 @@ textForAbilityEditbox:SetText("Search:")
 
 
 -- EditBox 
-local abilityEditbox = CreateFrame("EditBox", nil, searchTextField)
+local abilityEditbox = CreateFrame("EditBox", nil, searchTextField, BackdropTemplateMixin and "BackdropTemplate")
 abilityEditbox:SetHeight(18)
 abilityEditbox:SetWidth(125)--(235)
 abilityEditbox:SetPoint("LEFT", textForAbilityEditbox, "RIGHT", 0, 0)
@@ -507,7 +507,7 @@ textForAttackSpeedEditbox:SetText("AtkSpeed:")
 
 
 -- EditBox 
-local attackSpeedEditbox = CreateFrame("EditBox", nil, searchTextField)
+local attackSpeedEditbox = CreateFrame("EditBox", nil, searchTextField, BackdropTemplateMixin and "BackdropTemplate")
 attackSpeedEditbox:SetHeight(18)
 attackSpeedEditbox:SetWidth(40)--(235)
 attackSpeedEditbox:SetPoint("LEFT", textForAttackSpeedEditbox, "RIGHT", 5, 0)
@@ -596,7 +596,7 @@ textForRankEditbox:SetText("Rank:")
 
 
 -- EditBox 
-local rankEditbox = CreateFrame("EditBox", nil, searchTextField2)
+local rankEditbox = CreateFrame("EditBox", nil, searchTextField2, BackdropTemplateMixin and "BackdropTemplate")
 rankEditbox:SetHeight(18)
 rankEditbox:SetWidth(60)--(235)
 rankEditbox:SetPoint("LEFT", textForRankEditbox, "RIGHT", 0, 0)
@@ -717,7 +717,7 @@ searchFrame.dropdownMenu = dropdownMenu
 ------------------------------------
 for f_index = 1, 6 do
 
-	local s_frame = CreateFrame("Frame", nil, searchFrame)--, "ThinBorderTemplate")
+	local s_frame = CreateFrame("Frame", nil, searchFrame, BackdropTemplateMixin and "BackdropTemplate")--, "ThinBorderTemplate")
 	s_frame:SetHeight(70)
 	s_frame:SetWidth(280)
 	s_frame:SetPoint(

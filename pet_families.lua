@@ -7,7 +7,12 @@ end
 
 
 ClassicHunterPetInfo.PET_FAMILIES = {
-	["Bat"] = {
+
+	-----------------------------
+	-- Vanilla                 --
+	-----------------------------
+
+	["Bat"] = { -- added in Vanilla
 		["type"] = "|cffa40000Offense|r",
 		["stat_mod"] = {
 			["health"] = 1.00,
@@ -27,7 +32,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132182,
 	},
-	["Bear"] = {
+	["Bear"] = { -- added in Vanilla
 		["type"] = "|cff1070ffDefense|r",
 		["stat_mod"] = {
 			["health"] = 1.08,
@@ -41,17 +46,16 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 			"Growl",
 		},
 		["diet"] = {
-			"all",
-			--"Bread",
-			--"Cheese",
-			--"Fish",
-			--"Fruit",
-			--"Fungus",
-			--"Meat",
+			"Bread",
+			"Cheese",
+			"Fish",
+			"Fruit",
+			"Fungus",
+			"Meat",
 		},
 		["textureID"] = 132183,
 	},
-	["Boar"] = {
+	["Boar"] = { -- added in Vanilla
 		["type"] = "|cff1070ffDefense|r",
 		["stat_mod"] = {
 			["health"] = 1.04,
@@ -63,20 +67,20 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 			"Charge",
 			"Cower",
 			"Dash",
+			"Gore",
 			"Growl",
 		},
 		["diet"] = {
-			"all",
-			--"Bread",
-			--"Cheese",
-			--"Fish",
-			--"Fruit",
-			--"Fungus",
-			--"Meat",
+			"Bread",
+			"Cheese",
+			"Fish",
+			"Fruit",
+			"Fungus",
+			"Meat",
 		},
 		["textureID"] = 132184,
 	},
-	["Carrion Bird"] = {
+	["Carrion Bird"] = { -- added in Vanilla
 		["type"] = "|cff159908General|r",
 		["stat_mod"] = {
 			["health"] = 1.00,
@@ -97,7 +101,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132200,
 	},
-	["Cat"] = {
+	["Cat"] = { -- added in Vanilla
 		["type"] = "|cffa40000Offense|r",
 		["stat_mod"] = {
 			["health"] = 0.98,
@@ -118,7 +122,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132185,
 	},
-	["Crab"] = {
+	["Crab"] = { -- added in Vanilla
 		["type"] = "|cff1070ffDefense|r",
 		["stat_mod"] = {
 			["health"] = 0.96,
@@ -138,7 +142,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132186,
 	},
-	["Crocolisk"] = {
+	["Crocolisk"] = { -- added in Vanilla
 		["type"] = "|cff1070ffDefense|r",
 		["stat_mod"] = {
 			["health"] = 0.95,
@@ -156,7 +160,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132187,
 	},
-	["Gorilla"] = {
+	["Gorilla"] = { -- added in Vanilla
 		["type"] = "|cff1070ffDefense|r",
 		["stat_mod"] = {
 			["health"] = 1.04,
@@ -175,7 +179,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132189,
 	},
-	["Hyena"] = {
+	["Hyena"] = { -- added in Vanilla
 		["type"] = "|cff159908General|r",
 		["stat_mod"] = {
 			["health"] = 1.00,
@@ -194,7 +198,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132190,
 	},
-	["Owl"] = {
+	["Owl"] = { -- added in Vanilla
 		["type"] = "|cffa40000Offense|r",
 		["stat_mod"] = {
 			["health"] = 1.00,
@@ -213,7 +217,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132192,
 	},
-	["Raptor"] = {
+	["Raptor"] = { -- added in Vanilla
 		["type"] = "|cffa40000Offense|r",
 		["stat_mod"] = {
 			["health"] = 0.95,
@@ -224,6 +228,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 			"Bite",
 			"Claw",
 			"Cower",
+			"Dash",
 			"Growl",
 		},
 		["diet"] = {
@@ -231,7 +236,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132193,
 	},
-	["Scorpid"] = {
+	["Scorpid"] = { -- added in Vanilla
 		["type"] = "|cff1070ffDefense|r",
 		["stat_mod"] = {
 			["health"] = 1.00,
@@ -249,7 +254,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132195,
 	},
-	["Spider"] = {
+	["Spider"] = { -- added in Vanilla
 		["type"] = "|cffa40000Offense|r",
 		["stat_mod"] = {
 			["health"] = 1.00,
@@ -266,7 +271,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132196,
 	},
-	["Tallstrider"] = {
+	["Tallstrider"] = { -- added in Vanilla
 		["type"] = "|cff1070ffDefense|r",
 		["stat_mod"] = {
 			["health"] = 1.05,
@@ -286,7 +291,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132198,
 	},
-	["Turtle"] = {
+	["Turtle"] = { -- added in Vanilla
 		["type"] = "|cff1070ffDefense|r",
 		["stat_mod"] = {
 			["health"] = 1.00,
@@ -306,7 +311,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132199,
 	},
-	["Wind Serpent"] = {
+	["Wind Serpent"] = { -- added in Vanilla
 		["type"] = "|cffa40000Offense|r",
 		["stat_mod"] = {
 			["health"] = 1.00,
@@ -327,7 +332,7 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 		},
 		["textureID"] = 132202,
 	},
-	["Wolf"] = {
+	["Wolf"] = { -- added in Vanilla
 		["type"] = "|cff159908General|r",
 		["stat_mod"] = {
 			["health"] = 1.00,
@@ -345,5 +350,134 @@ ClassicHunterPetInfo.PET_FAMILIES = {
 			"Meat",
 		},
 		["textureID"] = 132203,
+	},
+
+
+	-----------------------------
+	-- The Burning Crusade     --
+	-----------------------------
+
+	["Dragonhawk"] = { -- added in TBC
+		["type"] = "|cff159908General|r",
+		["stat_mod"] = {
+			["health"] = 1.00,
+			["armor"] = 1.00,
+			["damage"] = 1.00,
+		},
+		["abilities"] = {        
+			"Bite",
+			"Cower",
+			"Dive",
+			"Fire Breath",
+			"Growl",
+		},
+		["diet"] = {
+			"Fish",
+			"Raw Fish",
+			"Fruit",
+			"Meat",
+			"Raw Meat",
+		},
+		["textureID"] = 132188,
+	},
+	["Nether Ray"] = { -- added in TBC
+		["type"] = "|cff1070ffDefense|r",
+		["stat_mod"] = {
+			["health"] = 1.10,
+			["armor"] = 0.90,
+			["damage"] = 1.03,
+		},
+		["abilities"] = {
+			"Bite",
+			"Cower",
+			"Dive",
+			"Growl",
+		},
+		["diet"] = {
+			"Meat",
+			"Raw Meat",
+		},
+		["textureID"] = 132191,
+	},
+	["Ravager"] = { -- added in TBC
+		["type"] = "|cffa40000Offense|r",
+		["stat_mod"] = {
+			["health"] = 0.93,
+			["armor"] = 1.05,
+			["damage"] = 1.10,
+		},
+		["abilities"] = {        
+			"Bite",
+			"Cower",
+			"Dash",
+			"Gore",
+			"Growl",
+		},
+		["diet"] = {
+			"Meat",
+			"Raw Meat",
+		},
+		["textureID"] = 132194,
+	},
+	["Serpent"] = { -- added in TBC
+		["type"] = "|cff159908General|r",
+		["stat_mod"] = {
+			["health"] = 1.00,
+			["armor"] = 1.00,
+			["damage"] = 1.00,
+		},
+		["abilities"] = {        
+			"Bite",
+			"Cower",
+			"Growl",
+			"Poison Spit",
+		},
+		["diet"] = {
+			"Fish",
+			"Raw Fish",
+			"Meat",
+			"Raw Meat",
+		},
+		["textureID"] = 136040,
+	},
+	["Sporebat"] = { -- added in TBC
+		["type"] = "|cff159908General|r",
+		["stat_mod"] = {
+			["health"] = 1.00,
+			["armor"] = 1.00,
+			["damage"] = 1.00,
+		},
+		["abilities"] = {   
+			"Cower",
+			"Growl",
+		},
+		["diet"] = {
+			"Bread",
+			"Cheese",
+			"Fruit",
+			"Fungus",
+		},
+		["textureID"] = 132197,
+	},
+	["Warp Stalker"] = { -- added in TBC
+		["type"] = "|cff1070ffDefense|r",
+		["stat_mod"] = {
+			["health"] = 1.00,
+			["armor"] = 1.05,
+			["damage"] = 0.94,
+		},
+		["abilities"] = {        
+			"Bite",
+			"Claw",
+			"Cower",
+			"Growl",
+			"Warp",
+		},
+		["diet"] = {
+			"Fish",
+			"Raw Fish",
+			"Fruit",
+		},
+		["textureID"] = 132201,
 	},
 }
