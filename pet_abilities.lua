@@ -5,8 +5,6 @@ if select(2, UnitClass("player")) ~= "HUNTER" then
     --return
 end
 
--- .*npc=(\d+)'>.*
--- [$1] = {\n\t["ability"] = XXXXX,\n\t["rank"] = YYYYY\n},
 
 ClassicHunterPetInfo.PET_ABILITIES = {
 	[1509] = {
@@ -2166,3 +2164,10 @@ ClassicHunterPetInfo.PET_ABILITIES = {
 		},
 	},
 }
+
+
+-- for k,v in pairs(ClassicHunterPetInfo.PET_ABILITIES) do
+-- 	if ClassicHunterPetInfo.PET_INFORMATION[k] == nil then
+-- 		print(k)
+-- 	end
+-- end
