@@ -2,7 +2,7 @@
 ## Author: Spielstein@Curse
 ## Title: ClassicHunterPetInfo
 ## Notes: Adds useful and additional tooltip information to (tameable) hunter pets and lets you search for specific pets
-## Version : 0.5a
+## Version : 0.5b
 ## SavedVariables: ClassicHunterPetInfoDB
 
 
