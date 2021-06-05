@@ -41,6 +41,17 @@ ClassicHunterPetInfo.LOCALE_CODE = "enUS"
 ClassicHunterPetInfo.LOCALE_CODE = GetLocale()
 
 
+ClassicHunterPetInfo.DIET_ICONS = {
+	["Bread"] = "133968",
+	["Cheese"] = "133949",
+	["Fish"] = "134031",
+	["Fruit"] = "133976",
+	["Fungus"] = "134528",
+	["Meat"] = "134021",
+	["Raw Fish"] = "133906",
+	["Raw Meat"] = "134036",
+}
+
 
 ----------------------------------------------------------------------------
 ----------------------------------------------------------------------------
@@ -142,16 +153,12 @@ local function GetSortFunction()
 	if GetSortFunctionID() == 1 then
 		return SortByAlphabet
 	elseif GetSortFunctionID() == 2 then
-		return SortByAtkSpeedASC
-	elseif GetSortFunctionID() == 3 then
-		return SortByAtkSpeedDESC	
-	elseif GetSortFunctionID() == 4 then
 		return SortByMinLevelASC
-	elseif GetSortFunctionID() == 5 then
+	elseif GetSortFunctionID() == 3 then
 		return SortByMinLevelDESC
-	elseif GetSortFunctionID() == 6 then
+	elseif GetSortFunctionID() == 4 then
 		return SortByMaxLevelASC
-	elseif GetSortFunctionID() == 7 then
+	elseif GetSortFunctionID() == 5 then
 		return SortByMaxLevelDESC
 	else
 		return SortByAlphabet
@@ -229,21 +236,6 @@ local function SearchForAbility(searchTerm, rank)
 	return foundData
 end
 
-local function SearchForMinAttackSpeed(attackSpeed)
-	local npc_id, data
-
-	local foundData = {}
-
-	for npc_id, data in pairs(ClassicHunterPetInfo.PET_INFORMATION) do
-	--for npc_id, data in spairs(ClassicHunterPetInfo.PET_INFORMATION, SortByAtkSpeed) do
-		if data["attack_speed"] < 999 and data["attack_speed"] <= attackSpeed then
-			table.insert(foundData, npc_id)
-		end
-	end
-
-	return foundData
-end
-
 
 local function ParseAbilityText(abilityText, rankNumber)
 
@@ -256,15 +248,6 @@ local function ParseAbilityText(abilityText, rankNumber)
 	return {}
 end
 
-local function ParseAttackSpeedText(attackSpeed, attackSpeedText)
-
-	if attackSpeed == 0 and tostring(attackSpeed) ~= attackSpeedText then
-		return {}
-	else
-		return SearchForMinAttackSpeed(attackSpeed)
-	end
-	
-end
 
 local function IntersectionOfParsedTexts(list_1, list_2)
     
@@ -416,7 +399,7 @@ textForAbilityEditbox:SetHeight(25)
 textForAbilityEditbox:SetWidth(45)
 textForAbilityEditbox:SetPoint("TOPLEFT", searchTextField, "TOPLEFT", 0, 0)
 textForAbilityEditbox:SetJustifyH("LEFT")
-textForAbilityEditbox:SetText("Search:")
+textForAbilityEditbox:SetText("Ability:")
 
 
 -- EditBox 
@@ -451,15 +434,13 @@ end
 abilityEditbox:SetScript("OnTextChanged", function(self)
 
 	local textAbilities = GetEditbox(1):GetText()
-	local textAttackSpeed = GetEditbox(2):GetText()
-	local numberAttackSpeed = GetEditbox(2):GetNumber()
-	local textRank = GetEditbox(3):GetText()
-	local numberRank = GetEditbox(3):GetNumber()
+
+	local textRank = GetEditbox(2):GetText()
+	local numberRank = GetEditbox(2):GetNumber()
 
 	local resultAbilities = ParseAbilityText(textAbilities, numberRank)
-	local resultAttackSpeed = ParseAttackSpeedText(numberAttackSpeed, textAttackSpeed)
 
-	searchFrame.DisplayData = IntersectionOfParsedTexts(resultAttackSpeed, resultAbilities)
+	searchFrame.DisplayData = IntersectionOfParsedTexts({}, resultAbilities)
 	searchFrame.DataOffset = 0
 
 	self.button:SetShown(textAbilities ~= "")
@@ -477,7 +458,7 @@ end)
 
 abilityEditbox:SetScript("OnTabPressed", function(self)
 	self:ClearFocus()
-	GetEditbox(3):SetFocus()
+	GetEditbox(2):SetFocus()
 end)
 
 searchFrame.abilityEditbox = abilityEditbox
@@ -496,101 +477,12 @@ searchFrame.abilityEditbox.button = abilityDeleteButton
 
 
 ------------------------------------
--- Editbox 2 (attackspeed-search) --
-------------------------------------
-local textForAttackSpeedEditbox = searchTextField:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-textForAttackSpeedEditbox:SetHeight(25)
-textForAttackSpeedEditbox:SetWidth(60)
-textForAttackSpeedEditbox:SetPoint("LEFT", abilityEditbox, "RIGHT", 5, 0)
-textForAttackSpeedEditbox:SetJustifyH("LEFT")
-textForAttackSpeedEditbox:SetText("AtkSpeed:")
-
-
--- EditBox 
-local attackSpeedEditbox = CreateFrame("EditBox", nil, searchTextField, BackdropTemplateMixin and "BackdropTemplate")
-attackSpeedEditbox:SetHeight(18)
-attackSpeedEditbox:SetWidth(40)--(235)
-attackSpeedEditbox:SetPoint("LEFT", textForAttackSpeedEditbox, "RIGHT", 5, 0)
-
-attackSpeedEditbox:SetFontObject("GameFontHighlightSmall")
-attackSpeedEditbox:SetMultiLine(false)
-attackSpeedEditbox:SetAutoFocus(false)
-attackSpeedEditbox:SetBackdrop(
-	{
-		bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
-		edgeFile = "Interface\\ChatFrame\\ChatFrameBackground",
-		tile = true, edgeSize = 1, tileSize = 5,
-	}
-)
-attackSpeedEditbox:SetBackdropColor(0, 0, 0, 0.2)
-attackSpeedEditbox:SetBackdropBorderColor(0.3, 0.3, 0.30, 0.80)
-attackSpeedEditbox:SetJustifyH("LEFT")
-attackSpeedEditbox:SetCursorPosition(0)
-attackSpeedEditbox.LastInput = ""
-SetEditbox(2, attackSpeedEditbox)
-
--- Editbox scripts
-attackSpeedEditbox:SetScript("OnEnterPressed", function(self)
-	self:ClearFocus()
-end)
-
-attackSpeedEditbox:SetScript("OnTextChanged", function(self)
-	
-	GetEditbox(2):SetText(string.gsub(GetEditbox(2):GetText(), ",", "."))
-
-	local textAbilities = GetEditbox(1):GetText()
-	local textAttackSpeed = GetEditbox(2):GetText()
-	local numberAttackSpeed = GetEditbox(2):GetNumber()
-	local textRank = GetEditbox(3):GetText()
-	local numberRank = GetEditbox(3):GetNumber()
-
-	local resultAbilities = ParseAbilityText(textAbilities, numberRank)
-	local resultAttackSpeed = ParseAttackSpeedText(numberAttackSpeed, textAttackSpeed)
-
-	searchFrame.DisplayData = IntersectionOfParsedTexts(resultAttackSpeed, resultAbilities)
-	searchFrame.DataOffset = 0
-
-	self.button:SetShown(textAttackSpeed ~= "")
-	
-	searchFrame:UpdateFrame()
-end)
-
-attackSpeedEditbox:SetScript("OnEscapePressed", function(self)
-	self:ClearFocus()
-end)
-
-attackSpeedEditbox:SetScript("OnEditFocusLost", function(self)
-	self:ClearFocus()
-end)
-
-attackSpeedEditbox:SetScript("OnTabPressed", function(self)
-	self:ClearFocus()
-	GetEditbox(1):SetFocus()
-end)
-
-
-searchFrame.attackSpeedEditbox = attackSpeedEditbox
-
-
-local attackSpeedDeleteButton = CreateFrame("Button", nil, attackSpeedEditbox, "UIPanelSquareButton")
-attackSpeedDeleteButton:SetScale(0.5)
-attackSpeedDeleteButton:SetPoint("CENTER", attackSpeedEditbox, "RIGHT", -18, 0)
-attackSpeedDeleteButton:Hide()
-attackSpeedDeleteButton:SetScript("OnClick", function(self)
-	self:GetParent():SetText("")
-end)
-
-searchFrame.attackSpeedEditbox.button = attackSpeedDeleteButton
-
-
-
-------------------------------------
--- Editbox 3 (rank-search)     --
+-- Editbox 2 (rank-search)     --
 ------------------------------------
 local textForRankEditbox = searchTextField2:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 textForRankEditbox:SetHeight(25)
 textForRankEditbox:SetWidth(45)
-textForRankEditbox:SetPoint("TOPLEFT", searchTextField2, "TOPLEFT", 0, 0)
+textForRankEditbox:SetPoint("LEFT", abilityEditbox, "RIGHT", 10, 0)
 textForRankEditbox:SetJustifyH("LEFT")
 textForRankEditbox:SetText("Rank:")
 
@@ -598,8 +490,8 @@ textForRankEditbox:SetText("Rank:")
 -- EditBox 
 local rankEditbox = CreateFrame("EditBox", nil, searchTextField2, BackdropTemplateMixin and "BackdropTemplate")
 rankEditbox:SetHeight(18)
-rankEditbox:SetWidth(60)--(235)
-rankEditbox:SetPoint("LEFT", textForRankEditbox, "RIGHT", 0, 0)
+rankEditbox:SetWidth(65)--(235)
+rankEditbox:SetPoint("LEFT", textForRankEditbox, "RIGHT", -10, 0)
 
 rankEditbox:SetFontObject("GameFontHighlightSmall")
 rankEditbox:SetMultiLine(false)
@@ -616,7 +508,7 @@ rankEditbox:SetBackdropBorderColor(0.3, 0.3, 0.30, 0.80)
 rankEditbox:SetJustifyH("LEFT")
 rankEditbox:SetCursorPosition(0)
 rankEditbox.LastInput = ""
-SetEditbox(3, rankEditbox)
+SetEditbox(2, rankEditbox)
 
 -- Editbox scripts
 rankEditbox:SetScript("OnEnterPressed", function(self)
@@ -627,15 +519,12 @@ end
 rankEditbox:SetScript("OnTextChanged", function(self)
 
 	local textAbilities = GetEditbox(1):GetText()
-	local textAttackSpeed = GetEditbox(2):GetText()
-	local numberAttackSpeed = GetEditbox(2):GetNumber()
-	local textRank = GetEditbox(3):GetText()
-	local numberRank = GetEditbox(3):GetNumber()
+	local textRank = GetEditbox(2):GetText()
+	local numberRank = GetEditbox(2):GetNumber()
 
 	local resultAbilities = ParseAbilityText(textAbilities, numberRank)
-	local resultAttackSpeed = ParseAttackSpeedText(numberAttackSpeed, textAttackSpeed)
 
-	searchFrame.DisplayData = IntersectionOfParsedTexts(resultAttackSpeed, resultAbilities)
+	searchFrame.DisplayData = IntersectionOfParsedTexts({}, resultAbilities)
 	searchFrame.DataOffset = 0
 
 	self.button:SetShown(textRank ~= "")
@@ -653,7 +542,7 @@ end)
 
 rankEditbox:SetScript("OnTabPressed", function(self)
 	self:ClearFocus()
-	GetEditbox(2):SetFocus()
+	GetEditbox(1):SetFocus()
 end)
 
 searchFrame.rankEditbox = rankEditbox
@@ -676,10 +565,9 @@ searchFrame.rankEditbox.button = rankDeleteButton
 local dropdownMenu = {}
 
 dropdownMenu.element = L_Create_UIDropDownMenu("ClassicHunterPetInfoFrame_Dropdown", searchFrame)
-dropdownMenu.element:SetPoint("LEFT", searchFrame.rankEditbox, "RIGHT", -2, -2)
+dropdownMenu.element:SetPoint("TOPLEFT", searchTextField2, "TOPLEFT", -20, 0)
 dropdownMenu.items = {
 	"Alphabetical",
-	"AttackSpeed (ascending)", "AttackSpeed (descending)",
 	"Min. Level (ascending)", "Min. Level (descending)",
 	"Max. Level (ascending)", "Max. Level (descending)",
 }
@@ -703,7 +591,7 @@ local function initialize(self, level)
 	end
 end
 L_UIDropDownMenu_Initialize(dropdownMenu.element, initialize)
-L_UIDropDownMenu_SetWidth(dropdownMenu.element, 145)
+L_UIDropDownMenu_SetWidth(dropdownMenu.element, 155)
 L_UIDropDownMenu_SetButtonWidth(dropdownMenu.element, 145)
 L_UIDropDownMenu_JustifyText(dropdownMenu.element, "LEFT")
 L_UIDropDownMenu_SetSelectedID(dropdownMenu.element, 1)
@@ -751,22 +639,14 @@ for f_index = 1, 6 do
 	s_frame.Name:SetJustifyH("LEFT")
 	s_frame.Name:SetText("")
 
-	-- AttackSpeed, Level, Location
-	s_frame.AttackSpeed = s_frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-	local font, size, flags = s_frame.AttackSpeed:GetFont()
-	s_frame.AttackSpeed:SetFont(font, size - 3, flags)
-	s_frame.AttackSpeed:SetHeight(25)
-	s_frame.AttackSpeed:SetWidth(200)
-	s_frame.AttackSpeed:SetPoint("TOP", s_frame.Name, "BOTTOM", 0, 12)
-	s_frame.AttackSpeed:SetJustifyH("LEFT")
-	s_frame.AttackSpeed:SetText("")
+	-- Level, Location
 
 	s_frame.LVL_and_Location = s_frame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 	local font, size, flags = s_frame.LVL_and_Location:GetFont()
 	s_frame.LVL_and_Location:SetFont(font, size - 3, flags)
 	s_frame.LVL_and_Location:SetHeight(25)
 	s_frame.LVL_and_Location:SetWidth(200)
-	s_frame.LVL_and_Location:SetPoint("TOP", s_frame.AttackSpeed, "BOTTOM", 0, 15)
+	s_frame.LVL_and_Location:SetPoint("TOP", s_frame.Name, "BOTTOM", 0, 12)
 	s_frame.LVL_and_Location:SetJustifyH("LEFT")
 	s_frame.LVL_and_Location:SetText("")
 
@@ -810,11 +690,6 @@ for f_index = 1, 6 do
 			if petData and familyData then
 				self.Icon:SetTexture(familyData["textureID"])
 				self.Name:SetText(petData["name"])
-				if petData["attack_speed"] >= 999 then
-					self.AttackSpeed:SetText("AtkSpeed: unknown")
-				else
-					self.AttackSpeed:SetText(string.format("AtkSpeed: %.2f", petData["attack_speed"]))
-				end
 				if petData["min_level"] == petData["max_level"] then
 					self.LVL_and_Location:SetText(
 						string.format(
@@ -1007,13 +882,8 @@ opanel.suboptionTitle:SetText("Enable/Disable single information")
 opanel.suboptionTitle:SetJustifyH("LEFT")
 
 --
-opanel.BOXshowAttackSpeed, opanel.TEXTshowAttackSpeed = CreateCheckbox(
-	opanel, "HPI_showAttackSpeed", 0, -5, opanel.suboptionTitle,
-	"showAttackSpeed", "Show Tooltip information for the pet's Attack Speed")
-
---
 opanel.BOXshowFamily, opanel.TEXTshowFamily = CreateCheckbox(
-	opanel, "HPI_showFamily", 0, -1, opanel.BOXshowAttackSpeed,
+	opanel, "HPI_showFamily", 0, -5, opanel.suboptionTitle,
 	"showFamily", "Show Tooltip information for the pet's Family")
 
 --
@@ -1022,8 +892,14 @@ opanel.BOXshowDiet, opanel.TEXTshowDiet = CreateCheckbox(
 	"showDiet", "Show Tooltip information for the pet's Diet")
 
 --
+opanel.BOXshowDietIcons, opanel.TEXTshowDietIcons = CreateCheckbox(
+	opanel, "HPI_showDietIcons", 0, -1, opanel.BOXshowDiet,
+	"showDietIcons", "Show Icons instead of Text for a pet's Diet in the Tooltip")
+
+
+--
 opanel.BOXshowType, opanel.TEXTshowType = CreateCheckbox(
-	opanel, "HPI_showType", 0, -1, opanel.BOXshowDiet,
+	opanel, "HPI_showType", 0, -1, opanel.BOXshowDietIcons,
 	"showType", "Show Tooltip information for the pet's Combat Type")
 
 --
@@ -1129,14 +1005,6 @@ local function HookfunctionForGametooltip(...)
 
 						local petinfo = ClassicHunterPetInfo.PET_INFORMATION[npc_id_as_number]
 
-						if ClassicHunterPetInfoDB.showAttackSpeed then
-							if petinfo["attack_speed"] >= 999 then
-								GameTooltip:AddDoubleLine(ClassicHunterPetInfo.LOCALIZATION["tlp_attack_speed"], "unknown")
-							else
-								GameTooltip:AddDoubleLine(ClassicHunterPetInfo.LOCALIZATION["tlp_attack_speed"], string.format("%.2f", petinfo["attack_speed"]))
-							end
-						end
-
 						if ClassicHunterPetInfoDB.showFamily then
 							GameTooltip:AddDoubleLine(ClassicHunterPetInfo.LOCALIZATION["tlp_family"], petinfo["family"])
 						end
@@ -1146,7 +1014,16 @@ local function HookfunctionForGametooltip(...)
 							local familyinfo = ClassicHunterPetInfo.PET_FAMILIES[petinfo["family"]]
 
 							if ClassicHunterPetInfoDB.showDiet then
-								GameTooltip:AddDoubleLine(ClassicHunterPetInfo.LOCALIZATION["tlp_diet"], table.concat(familyinfo["diet"], ", "))
+								local dietInfoTable = {}
+
+								if ClassicHunterPetInfoDB.showDietIcons then
+									for index = 1, #familyinfo["diet"] do
+										dietInfoTable[index] = "|T" .. ClassicHunterPetInfo.DIET_ICONS[familyinfo["diet"][index]] .. ":14:14:2:0|t"
+									end
+								else
+									dietInfoTable = familyinfo["diet"]
+								end
+								GameTooltip:AddDoubleLine(ClassicHunterPetInfo.LOCALIZATION["tlp_diet"], table.concat(dietInfoTable, ", "))
 							end
 
 							if ClassicHunterPetInfoDB.showType then
@@ -1267,9 +1144,9 @@ local function OnEvent(self, event, arg1, arg2, ...)
 			ClassicHunterPetInfoDB.showForWildPets = true
 		end
 		-- secondary options
-		if ClassicHunterPetInfoDB.showAttackSpeed == nil then
-			ClassicHunterPetInfoDB.showAttackSpeed = true
-		end
+		 if ClassicHunterPetInfoDB.showDietIcons == nil then
+		 	ClassicHunterPetInfoDB.showDietIcons = false
+		 end
 		if ClassicHunterPetInfoDB.showFamily == nil then
 			ClassicHunterPetInfoDB.showFamily = false
 		end
@@ -1313,7 +1190,7 @@ local function OnEvent(self, event, arg1, arg2, ...)
     	ClassicHunterPetInfo.opanel.BOXshowForOtherPets:SetChecked(ClassicHunterPetInfoDB.showForOtherPets)
     	ClassicHunterPetInfo.opanel.BOXshowForWildPets:SetChecked(ClassicHunterPetInfoDB.showForWildPets)
     	-- secondary options
-    	ClassicHunterPetInfo.opanel.BOXshowAttackSpeed:SetChecked(ClassicHunterPetInfoDB.showAttackSpeed)
+    	ClassicHunterPetInfo.opanel.BOXshowDietIcons:SetChecked(ClassicHunterPetInfoDB.showDietIcons)
 		ClassicHunterPetInfo.opanel.BOXshowFamily:SetChecked(ClassicHunterPetInfoDB.showFamily)
 		ClassicHunterPetInfo.opanel.BOXshowType:SetChecked(ClassicHunterPetInfoDB.showType)
 		ClassicHunterPetInfo.opanel.BOXshowStatmod:SetChecked(ClassicHunterPetInfoDB.showStatmod)
