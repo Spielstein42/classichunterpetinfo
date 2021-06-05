@@ -32,6 +32,7 @@ end
 ClassicHunterPetInfo = {}
 ClassicHunterPetInfo.mainFrame = CreateFrame("Frame", "ClassicHunterPetInfoFrame", UIParent)
 ClassicHunterPetInfo.FIRST_SLASH_START = 0
+ClassicHunterPetInfo.HELP_WINDOWS_OPEN = false
 
 -- own realm
 ClassicHunterPetInfo.OWN_REALM = GetRealmName()
@@ -287,8 +288,6 @@ local function GetEditbox(index)
 		return ClassicHunterPetInfo.EDTBox1
 	elseif index == 2 and ClassicHunterPetInfo.EDTBox2 then
 		return ClassicHunterPetInfo.EDTBox2
-	elseif index == 3 and ClassicHunterPetInfo.EDTBox3 then
-		return ClassicHunterPetInfo.EDTBox3
 	else
 		return nil
 	end
@@ -300,8 +299,6 @@ local function SetEditbox(index, editbox)
 		ClassicHunterPetInfo.EDTBox1 = editbox
 	elseif index == 2 then
 		ClassicHunterPetInfo.EDTBox2 = editbox
-	elseif index == 3 then
-		ClassicHunterPetInfo.EDTBox3 = editbox
 	end
 end
 
@@ -600,6 +597,168 @@ L_UIDropDownMenu_SetText(dropdownMenu.element, "Sort by")
 searchFrame.dropdownMenu = dropdownMenu
 
 
+
+------------------------------------
+-- HelpFrame                      --
+------------------------------------
+
+local function createAbilityHelpButton(abilityName ,iconID, size, parent, point, relativeFrame, relativePoint, ofsx, ofsy)
+	local icon = CreateFrame("Button", nil, parent)
+	icon:SetSize(size, size)
+	icon:SetPoint(point, relativeFrame, relativePoint, ofsx, ofsy)
+
+	icon.abilityName = abilityName
+
+	icon:SetScript("OnClick", function(self, button, down)
+		GetEditbox(1):SetText(abilityName)
+	end)
+
+	icon.texture = icon:CreateTexture()
+	icon.texture:SetAllPoints(icon)
+	icon.texture:SetTexture(iconID)
+
+	icon.HighlightTexture = icon:CreateTexture()
+	icon.HighlightTexture:SetTexture("Interface\\Buttons\\UI-Common-MouseHilight")
+	icon.HighlightTexture:SetAllPoints()
+	icon.HighlightTexture:SetBlendMode("ADD")
+	icon:SetHighlightTexture(icon.HighlightTexture)
+
+	icon.text = icon:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	icon.text:SetText(abilityName)
+	icon.text:SetPoint("LEFT", icon, "RIGHT", 10, 0)
+
+	return icon
+end
+
+local helpFrame = CreateFrame("Frame", nil, searchFrame, "InsetFrameTemplate")
+
+helpFrame:SetHeight(430)
+helpFrame:SetWidth(200)
+helpFrame:SetPoint("TOPLEFT", searchFrame, "TOPRIGHT", -2, -27)
+
+helpFrame:Hide()
+
+
+helpFrame.title = helpFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalMed3")
+helpFrame.title:SetText("Ability Shortcuts")
+helpFrame.title:SetPoint("TOPLEFT", helpFrame, "TOPLEFT", 10, -10)
+
+helpFrame.iconBite = createAbilityHelpButton("Bite", 132278, 16, helpFrame, "TOPLEFT", helpFrame.title, "BOTTOMLEFT", 10, -10)
+helpFrame.iconCharge = createAbilityHelpButton("Charge", 132184, 16, helpFrame, "TOPLEFT", helpFrame.iconBite, "BOTTOMLEFT", 0, -7)
+helpFrame.iconClaw = createAbilityHelpButton("Claw", 132140, 16, helpFrame, "TOPLEFT", helpFrame.iconCharge, "BOTTOMLEFT", 0, -7)
+helpFrame.iconCower = createAbilityHelpButton("Cower", 132118, 16, helpFrame, "TOPLEFT", helpFrame.iconClaw, "BOTTOMLEFT", 0, -7)
+helpFrame.iconDash = createAbilityHelpButton("Dash", 132120, 16, helpFrame, "TOPLEFT", helpFrame.iconCower, "BOTTOMLEFT", 0, -7)
+helpFrame.iconDive = createAbilityHelpButton("Dive", 136126, 16, helpFrame, "TOPLEFT", helpFrame.iconDash, "BOTTOMLEFT", 0, -7)
+helpFrame.iconFireBreath = createAbilityHelpButton("Fire Breath", 135789, 16, helpFrame, "TOPLEFT", helpFrame.iconDive, "BOTTOMLEFT", 0, -7)
+helpFrame.iconFuriousHowl = createAbilityHelpButton("Furious Howl", 132203, 16, helpFrame, "TOPLEFT", helpFrame.iconFireBreath, "BOTTOMLEFT", 0, -7)
+helpFrame.iconGore = createAbilityHelpButton("Gore", 135664, 16, helpFrame, "TOPLEFT", helpFrame.iconFuriousHowl, "BOTTOMLEFT", 0, -7)
+helpFrame.iconLightningBreath = createAbilityHelpButton("Lightning Breath", 136048, 16, helpFrame, "TOPLEFT", helpFrame.iconGore, "BOTTOMLEFT", 0, -7)
+helpFrame.iconPoisonSpit = createAbilityHelpButton("Poison Spit", 136016, 16, helpFrame, "TOPLEFT", helpFrame.iconLightningBreath, "BOTTOMLEFT", 0, -7)
+helpFrame.iconProwl = createAbilityHelpButton("Prowl", 132142, 16, helpFrame, "TOPLEFT", helpFrame.iconPoisonSpit, "BOTTOMLEFT", 0, -7)
+helpFrame.iconScorpidPoison = createAbilityHelpButton("Scorpid Poison", 132274, 16, helpFrame, "TOPLEFT", helpFrame.iconProwl, "BOTTOMLEFT", 0, -7)
+helpFrame.iconScreech = createAbilityHelpButton("Screech", 132182, 16, helpFrame, "TOPLEFT", helpFrame.iconScorpidPoison, "BOTTOMLEFT", 0, -7)
+helpFrame.iconShellShield = createAbilityHelpButton("Shell Shield", 132199, 16, helpFrame, "TOPLEFT", helpFrame.iconScreech, "BOTTOMLEFT", 0, -7)
+helpFrame.iconThunderstomp = createAbilityHelpButton("Thunderstomp", 132189, 16, helpFrame, "TOPLEFT", helpFrame.iconShellShield, "BOTTOMLEFT", 0, -7)
+helpFrame.iconWarp = createAbilityHelpButton("Warp", 135731, 16, helpFrame, "TOPLEFT", helpFrame.iconThunderstomp, "BOTTOMLEFT", 0, -7)
+
+
+local optionsButton = CreateFrame("Button", nil, helpFrame)
+optionsButton:SetMotionScriptsWhileDisabled(true)
+optionsButton:SetSize(16, 16)
+optionsButton:SetPoint("BOTTOMRIGHT", helpFrame, "BOTTOMRIGHT", -3, 3)
+
+optionsButton.NormalTexture = optionsButton:CreateTexture()
+optionsButton.NormalTexture:SetTexture("Interface\\Buttons\\UI-OptionsButton")
+optionsButton.NormalTexture:SetSize(16, 16)
+optionsButton.NormalTexture:SetPoint("RIGHT", optionsButton, -3, 3)
+optionsButton:SetNormalTexture(optionsButton.NormalTexture)
+
+optionsButton.HighlightTexture = optionsButton:CreateTexture()
+optionsButton.HighlightTexture:SetTexture("Interface\\Buttons\\UI-Common-MouseHilight")
+optionsButton.HighlightTexture:SetSize(16, 16)
+optionsButton.HighlightTexture:SetPoint("RIGHT", optionsButton, -3, 3)
+optionsButton.HighlightTexture:SetBlendMode("ADD")
+optionsButton:SetHighlightTexture(optionsButton.HighlightTexture)
+
+optionsButton:SetScript("OnClick", function(self, button, down)
+	if ClassicHunterPetInfo.FIRST_SLASH_START == 0 then
+		ClassicHunterPetInfo.FIRST_SLASH_START = 1
+		InterfaceOptionsFrame_OpenToCategory(ClassicHunterPetInfo.opanel)
+	end
+	InterfaceOptionsFrame_OpenToCategory(ClassicHunterPetInfo.opanel)
+end)
+
+
+
+------------------------------------
+-- ExpandArrow                    --
+------------------------------------
+local expandArrow = CreateFrame("Button", nil, searchFrame)
+expandArrow:SetMotionScriptsWhileDisabled(true)
+expandArrow:SetSize(24, 24)
+expandArrow:SetPoint("BOTTOMRIGHT", searchTextField2, "BOTTOMRIGHT", 0, 0)
+
+expandArrow.NormalTexture = expandArrow:CreateTexture()
+expandArrow.NormalTexture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Up")
+expandArrow.NormalTexture:SetSize(24, 24)
+expandArrow.NormalTexture:SetPoint("RIGHT", expandArrow, 0, 0)
+expandArrow:SetNormalTexture(expandArrow.NormalTexture)
+
+expandArrow.PushedTexture = expandArrow:CreateTexture()
+expandArrow.PushedTexture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Down")
+expandArrow.PushedTexture:SetSize(24, 24)
+expandArrow.PushedTexture:SetPoint("RIGHT", expandArrow, 0, 0)
+expandArrow:SetPushedTexture(expandArrow.PushedTexture)
+
+expandArrow.DisabledTexture = expandArrow:CreateTexture()
+expandArrow.DisabledTexture:SetTexture("Interface\\ChatFrame\\UI-ChatIcon-ScrollDown-Disabled")
+expandArrow.DisabledTexture:SetSize(24, 24)
+expandArrow.DisabledTexture:SetPoint("RIGHT", expandArrow, 0, 0)
+expandArrow:SetDisabledTexture(expandArrow.DisabledTexture)
+
+expandArrow.HighlightTexture = expandArrow:CreateTexture()
+expandArrow.HighlightTexture:SetTexture("Interface\\Buttons\\UI-Common-MouseHilight")
+expandArrow.HighlightTexture:SetSize(24, 24)
+expandArrow.HighlightTexture:SetPoint("RIGHT", expandArrow, 0, 0)
+expandArrow.HighlightTexture:SetBlendMode("ADD")
+expandArrow:SetHighlightTexture(expandArrow.HighlightTexture)
+
+expandArrow.NormalTexture:SetRotation(math.pi/2)
+expandArrow.PushedTexture:SetRotation(math.pi/2)
+expandArrow.DisabledTexture:SetRotation(math.pi/2)
+expandArrow.HighlightTexture:SetRotation(math.pi/2)
+
+local function flipExpandArrow()
+
+	local rotation = math.pi / 2 * (ClassicHunterPetInfo.HELP_WINDOWS_OPEN and -1 or 1)
+
+	expandArrow.NormalTexture:SetRotation(rotation)
+	expandArrow.PushedTexture:SetRotation(rotation)
+	expandArrow.DisabledTexture:SetRotation(rotation)
+	expandArrow.HighlightTexture:SetRotation(rotation)
+end
+
+expandArrow:SetScript("OnClick", function(self, button, down)
+
+	-- Flip boolean
+	ClassicHunterPetInfo.HELP_WINDOWS_OPEN = not ClassicHunterPetInfo.HELP_WINDOWS_OPEN
+	-- rotate Texture
+    flipExpandArrow()
+	-- set Visibility of help frame
+	helpFrame:SetShown(ClassicHunterPetInfo.HELP_WINDOWS_OPEN)
+
+	-- reposition scrollbar
+	ClassicHunterPetInfo.searchFrame.scrollbar:ClearAllPoints()
+	if ClassicHunterPetInfo.HELP_WINDOWS_OPEN then
+		ClassicHunterPetInfo.searchFrame.scrollbar:SetPoint("RIGHT", ClassicHunterPetInfo.searchFrame, "LEFT", 1, -35)
+	else
+		ClassicHunterPetInfo.searchFrame.scrollbar:SetPoint("LEFT", ClassicHunterPetInfo.searchFrame, "RIGHT", -1, -35)
+	end
+end)
+
+searchFrame.ExpandArrow = expandArrow
+
+
 ------------------------------------
 -- Subframes                      --
 ------------------------------------
@@ -778,6 +937,7 @@ scrollbar:SetWidth(10)
 scrollbar:SetHeight(425)
 scrollbar:SetOrientation('VERTICAL')
 scrollbar:SetPoint("LEFT", searchFrame, "RIGHT", -1, -35)
+--scrollbar:SetPoint("RIGHT", searchFrame, "LEFT", 1, -35)
 
 scrollbar:SetMinMaxValues(0, 1)
 scrollbar:SetValue(0)
