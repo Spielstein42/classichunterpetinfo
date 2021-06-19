@@ -12,7 +12,7 @@ local wipe = table.wipe
 local CreateFrame, GetCursorPosition, GetCVar, GetScreenHeight, GetScreenWidth, PlaySound = _G.CreateFrame, _G.GetCursorPosition, _G.GetCVar, _G.GetScreenHeight, _G.GetScreenWidth, _G.PlaySound
 
 -- ----------------------------------------------------------------------------
-local MAJOR_VERSION = "LibUIDropDownMenu-2.0"
+local MAJOR_VERSION = "LibUIDropDownMenu-2.1"
 local MINOR_VERSION = 90000 + tonumber(("$Rev: 43 $"):match("%d+"))
 
 local LibStub = _G.LibStub
@@ -229,7 +229,7 @@ local function creatre_UIDropDownList(name, parent)
 		insets = { left = 11, right = 12, top = 12, bottom = 9, },
 	})
 	
-	f.MenuBackdrop= _G[name.."MenuBackdrop"] or CreateFrame("Frame", name.."MenuBackdrop", f)
+	f.MenuBackdrop= _G[name.."MenuBackdrop"] or CreateFrame("Frame", name.."MenuBackdrop", f, BackdropTemplateMixin and "BackdropTemplate")
 	f.MenuBackdrop:SetAllPoints()
 	f.MenuBackdrop:SetBackdrop({
 		bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
